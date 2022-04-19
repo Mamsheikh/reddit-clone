@@ -1,20 +1,34 @@
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { authModalState } from '../../../atoms/authModalAtom';
+import { auth } from '../../../firebase/clientApp';
+import { FIREBASE_ERRORS } from '../../../firebase/errors';
 
 type LoginProps = {};
 
 const Signup: React.FC<LoginProps> = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
+  const [createUserWithEmailAndPassword, user, loading, userError] =
+    useCreateUserWithEmailAndPassword(auth);
   const [signUpForm, setSignUpForm] = useState({
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [error, setError] = useState('');
 
-  const onSubmit = () => {};
-
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (error) setError('');
+    if (signUpForm.password !== signUpForm.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
+  };
+  // console.log(userError?.message);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setSignUpForm((prev) => ({
@@ -48,7 +62,7 @@ const Signup: React.FC<LoginProps> = () => {
       />
       <Input
         required
-        name='confirmPassword'
+        name='password'
         placeholder='password'
         type='password'
         mb={2}
@@ -70,7 +84,7 @@ const Signup: React.FC<LoginProps> = () => {
       />
       <Input
         required
-        name='password1'
+        name='confirmPassword'
         placeholder='confirm password'
         type='password'
         mb={2}
@@ -90,7 +104,19 @@ const Signup: React.FC<LoginProps> = () => {
         bg='gray.50'
         onChange={onChange}
       />
-      <Button width='100%' height='36px' mb={2} type='submit'>
+      {(error || userError) && (
+        <Text mb={2} color='red' fontSize='10pt' textAlign={'center'}>
+          {error ||
+            FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}
+        </Text>
+      )}
+      <Button
+        width='100%'
+        height='36px'
+        mb={2}
+        type='submit'
+        isLoading={loading}
+      >
         Sign Up
       </Button>
       <Flex fontSize={'9pt'} justifyContent='center'>
@@ -100,7 +126,7 @@ const Signup: React.FC<LoginProps> = () => {
           fontWeight='700'
           cursor={'pointer'}
           onClick={() =>
-            setAuthModalState((prev) => ({
+            setAuthModalState((prev: any) => ({
               ...prev,
               view: 'login',
             }))
