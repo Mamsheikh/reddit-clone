@@ -10,7 +10,7 @@ import { auth } from '../../../firebase/clientApp';
 const SubmitPostPage: React.FC = () => {
   const [user] = useAuthState(auth);
   const communityStateValue = useRecoilValue(communityState);
-  console.log('communityState', communityStateValue);
+  // console.log('communityState', communityStateValue);
   return (
     <PageContent>
       <>
