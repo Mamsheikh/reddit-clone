@@ -59,18 +59,13 @@ const useCommunityData = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (!user) return;
-    getMySnippets();
-  }, [user]);
-
   const joinCommunity = async (communityData: Community) => {
     setLoading(true);
     try {
       const batch = writeBatch(firestore);
       const newSnippet: CommunitySnippet = {
         communityId: communityData.id,
-        imageURL: communityData.imageUrl || '',
+        imageURL: communityData.imageURL || '',
       };
       batch.set(
         doc(
@@ -128,6 +123,16 @@ const useCommunityData = () => {
     }
     setLoading(false);
   };
+  useEffect(() => {
+    if (!user) {
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+      }));
+      return;
+    }
+    getMySnippets();
+  }, [user]);
 
   return {
     communityStateValue,
