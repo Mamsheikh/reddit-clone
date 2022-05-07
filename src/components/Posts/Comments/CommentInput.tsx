@@ -10,13 +10,9 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { User } from 'firebase/auth';
-import moment from 'moment';
+
 import React from 'react';
-import { FaReddit } from 'react-icons/fa';
-import {
-  IoArrowUpCircleOutline,
-  IoArrowDownCircleOutline,
-} from 'react-icons/io5';
+
 import AuthButtons from '../../Navbar/RightContent/AuthButtons';
 
 type CommentInputProps = {
