@@ -24,6 +24,7 @@ import {
 } from 'react-icons/io5';
 import { Post } from '../../atoms/postsAtom';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 type PostItemProps = {
   post: Post;
@@ -37,6 +38,7 @@ type PostItemProps = {
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost?: (post: Post) => void;
+  homePage?: boolean;
 };
 
 const PostItem: React.FC<PostItemProps> = ({
@@ -46,6 +48,7 @@ const PostItem: React.FC<PostItemProps> = ({
   onSelectPost,
   onVote,
   userIsCreator,
+  homePage,
 }) => {
   const router = useRouter();
   const [loadingImage, setLoadingImage] = useState(true);
@@ -128,6 +131,30 @@ const PostItem: React.FC<PostItemProps> = ({
             fontSize={'9pt'}
           >
             {/* Home Page check */}
+            {homePage && (
+              <>
+                {post.imageURL ? (
+                  <Image
+                    src={post.communityImageURL}
+                    alt=''
+                    borderRadius='full'
+                    boxSize='18px'
+                    mr={2}
+                  />
+                ) : (
+                  <Icon as={FaReddit} fontSize='18pt' mr={1} color='blue.500' />
+                )}
+                <Link href={`r/${post.communityId}`} passHref>
+                  <Text
+                    fontWeight={700}
+                    _hover={{ textDecoration: 'underline' }}
+                    onClick={(event) => event.stopPropagation()}
+                  >{`r/${post.communityId}`}</Text>
+                </Link>
+                <Icon as={BsDot} color='gray.500' fontSize={8} />
+              </>
+            )}
+
             <Text>
               Posted by u/{post.creatorDisplayName}{' '}
               {moment(new Date(post.createdAt.seconds * 1000)).fromNow()}

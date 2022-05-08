@@ -1,33 +1,28 @@
 import {
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Box,
-  Icon,
-  Text,
-  Input,
-  Stack,
+  Button,
   Checkbox,
   Flex,
+  Icon,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
 } from '@chakra-ui/react';
+import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsFillEyeFill, BsFillPersonFill } from 'react-icons/bs';
 import { HiLockClosed } from 'react-icons/hi';
-import React, { useState } from 'react';
-import {
-  doc,
-  getDoc,
-  runTransaction,
-  serverTimestamp,
-  setDoc,
-} from 'firebase/firestore';
 import { auth, firestore } from '../../../firebase/clientApp';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { Transaction } from '@google-cloud/firestore';
+import useDirectory from '../../../hooks/useDirectory';
 
 type CommunitModalProps = {
   open: boolean;
@@ -38,7 +33,9 @@ const CreateCommunityModal: React.FC<CommunitModalProps> = ({
   open,
   handleClose,
 }) => {
+  const router = useRouter();
   const [user] = useAuthState(auth);
+  const { toggleMenuOpen } = useDirectory();
   const [communityName, setCommunityName] = useState('');
   const [charsRemaining, setCharsRemaining] = useState(21);
   const [communityType, setCommunityType] = useState('public');
@@ -90,6 +87,9 @@ const CreateCommunityModal: React.FC<CommunitModalProps> = ({
           }
         );
       });
+      handleClose();
+      toggleMenuOpen();
+      router.push(`r/${communityName}`);
     } catch (error: any) {
       console.log(`handleCreateCommunity: ${error}`);
       setError(error.message);
