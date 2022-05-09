@@ -13,7 +13,7 @@ import {
 import { signOut, User } from 'firebase/auth';
 import React from 'react';
 import { CgProfile } from 'react-icons/cg';
-import { FiLogIn } from 'react-Icons/fi';
+import { MdOutlineLogin } from 'react-Icons/md';
 import { FaRedditSquare } from 'react-icons/fa';
 import { IoSparkles } from 'react-icons/io5';
 import { VscAccount } from 'react-icons/vsc';
@@ -94,7 +94,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
               onClick={logout}
             >
               <Flex align='center'>
-                <Icon as={FiLogIn} fontSize={20} mr={2} />
+                <Icon as={MdOutlineLogin} fontSize={20} mr={2} />
                 Logout
               </Flex>
             </MenuItem>
@@ -107,7 +107,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             onClick={() => setAuthModalState({ open: true, view: 'login' })}
           >
             <Flex align='center'>
-              <Icon as={FiLogIn} fontSize={20} mr={2} />
+              <Icon as={MdOutlineLogin} fontSize={20} mr={2} />
               Log In/Sign Up
             </Flex>
           </MenuItem>
