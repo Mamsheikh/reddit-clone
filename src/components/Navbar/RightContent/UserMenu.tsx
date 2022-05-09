@@ -13,7 +13,7 @@ import {
 import { signOut, User } from 'firebase/auth';
 import React from 'react';
 import { CgProfile } from 'react-icons/cg';
-import { MdOutlineLogin } from 'react-Icons/md';
+import { MdOutlineLogin } from 'react-icons/md';
 import { FaRedditSquare } from 'react-icons/fa';
 import { IoSparkles } from 'react-icons/io5';
 import { VscAccount } from 'react-icons/vsc';
