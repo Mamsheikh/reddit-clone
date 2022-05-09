@@ -16,6 +16,9 @@ import { useRecoilValue } from 'recoil';
 import { PostVote } from '../atoms/postsAtom';
 import { Post } from '../atoms/postsAtom';
 import CreatePostLink from '../components/Community/CreatePostLink';
+import PersonalHome from '../components/Community/PersonalHome';
+import Premium from '../components/Community/Premium';
+import Recommendations from '../components/Community/Recommendations';
 import PageContent from '../components/Layout/PageContent';
 import PostItem from '../components/Posts/PostItem';
 import PostLoader from '../components/Posts/PostLoader';
@@ -156,7 +159,13 @@ const Home: NextPage = () => {
           </Stack>
         )}
       </>
-      <></>
+      <>
+        <Stack spacing={5} position='sticky' top='14px'>
+          <Recommendations />
+          <Premium />
+          <PersonalHome />
+        </Stack>
+      </>
     </PageContent>
   );
 };
