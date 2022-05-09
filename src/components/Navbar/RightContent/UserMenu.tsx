@@ -13,9 +13,9 @@ import {
 import { signOut, User } from 'firebase/auth';
 import React from 'react';
 import { CgProfile } from 'react-icons/cg';
+import { FiLogIn } from 'react-Icons/fi';
 import { FaRedditSquare } from 'react-icons/fa';
 import { IoSparkles } from 'react-icons/io5';
-import { FiLogIn } from 'react-Icons/fi';
 import { VscAccount } from 'react-icons/vsc';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
