@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
-import { communityState } from '../atoms/communtiesAtom';
+import { PostVote } from '../atoms/postsAtom';
 import { Post } from '../atoms/postsAtom';
 import CreatePostLink from '../components/Community/CreatePostLink';
 import PageContent from '../components/Layout/PageContent';
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
         const myCommunityIds = communityStateValue.mySnippets.map(
           (snippet) => snippet.communityId
         );
-        console.log('myCommunityIds', myCommunityIds);
+        // console.log('myCommunityIds', myCommunityIds);
         const postsQuery = query(
           collection(firestore, 'posts'),
           where('communityId', 'in', myCommunityIds),
@@ -88,7 +88,27 @@ const Home: NextPage = () => {
     setLoading(false);
   };
 
-  const getUserPostVotes = () => {};
+  const getUserPostVotes = async () => {
+    try {
+      const postIds = postStateValue.posts.map((post) => post.id);
+      const postVotesQuery = query(
+        collection(firestore, `users/${user?.uid}/postVotes`),
+        where('postId', 'in', postIds)
+      );
+      const postVoteDocs = await getDocs(postVotesQuery);
+      const postVotes = postVoteDocs.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setPostStateValue((prev) => ({
+        ...prev,
+        postVotes: postVotes as PostVote[],
+      }));
+    } catch (error) {
+      console.log('getUserPostVotes error', error);
+    }
+  };
 
   useEffect(() => {
     if (communityStateValue.snippetsFetched) buildUserHomeFeed();
@@ -97,6 +117,17 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (!user && !loadingUser) buildNoUserHomeFeed();
   }, [user, loadingUser]);
+
+  useEffect(() => {
+    if (user && postStateValue.posts.length) getUserPostVotes();
+
+    return () => {
+      setPostStateValue((prev) => ({
+        ...prev,
+        postVotes: [],
+      }));
+    };
+  }, [user, postStateValue.posts]);
 
   return (
     <PageContent>
@@ -114,8 +145,9 @@ const Home: NextPage = () => {
                 onSelectPost={onSelectPost}
                 onVote={onVote}
                 userVoteValue={
-                  postStateValue.postVotes.find((item) => item.id === post.id)
-                    ?.voteValue
+                  postStateValue.postVotes.find(
+                    (item) => item.postId === post.id
+                  )?.voteValue
                 }
                 userIsCreator={user?.uid === post.creatorId}
                 homePage={true}
